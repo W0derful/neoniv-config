@@ -22,6 +22,7 @@ return {
                 "omnisharp",
                 "sqlls",
                 "vue_ls",
+                "clangd",
             },
             automatic_enable = false,   -- 关键：关闭自动启用
         })
@@ -116,6 +117,12 @@ return {
                 },
             },
         })
+        -- C / C++ (clangd)
+        vim.lsp.config("clangd", {
+             cmd = { "D:\\LLVM\\bin\\clangd.exe" },
+             filetypes = { "c", "cpp" },
+             root_markers = { ".clangd", "compile_commands.json", "compile_flags.txt", ".git" },
+        })
 
         -- 4. 手动启用所有需要的 LSP
         local servers = {
@@ -129,6 +136,7 @@ return {
             "omnisharp",
             "vue_ls",
             "ts_ls",
+            "clangd"
         }
         for _, server in ipairs(servers) do
             vim.lsp.enable(server)
