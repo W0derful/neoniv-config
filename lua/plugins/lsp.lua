@@ -60,6 +60,26 @@ return {
           "vue",
         },
         settings = {
+          -- 「类型提示」(inlay hints)：把推断出来的类型用灰色小字显示在变量/参数旁边。
+          -- 注意：vtsls 默认把所有 inlay hint 都关掉，不写这段就跟没有类型提示一样。
+          -- 可用 :InlayHintsToggle / :InlayHintsEnable / :InlayHintsDisable 临时开关。
+          typescript = {
+            inlayHints = {
+              parameterNames = { enabled = "all" },         -- 函数调用时的参数名
+              variableTypes = { enabled = true },           -- let/const 推断出的类型
+              functionLikeReturnTypes = { enabled = true }, -- 函数返回值类型
+              propertyDeclarationTypes = { enabled = true },-- 类属性声明类型
+              enumMemberValues = { enabled = true },        -- 枚举成员的值
+              parameterTypes = { enabled = true },          -- 函数参数类型
+            },
+          },
+          javascript = {
+            inlayHints = {
+              parameterNames = { enabled = "all" },
+              variableTypes = { enabled = true },
+              functionLikeReturnTypes = { enabled = true },
+            },
+          },
           vtsls = {
             autoUseWorkspaceTsdk = true,
             tsserver = {

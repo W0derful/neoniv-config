@@ -147,6 +147,21 @@ WRAP
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
+# 4.5 Rust 语言服务 rust-analyzer
+#     注意：~/.cargo/bin/rust-analyzer 只是 rustup 的代理壳，如果当前 toolchain
+#     没装 rust-analyzer 组件，它执行时会报 "Unknown binary"，Rust 的补全/提示
+#     会全部失效。所以这里必须真的能跑起来才算装好。
+# ─────────────────────────────────────────────────────────────────────────────
+if ! have rustup; then
+  warn "没有 rustup，跳过 rust-analyzer（https://rustup.rs）"
+elif rust-analyzer --version >/dev/null 2>&1 && [[ $UPGRADE -eq 0 ]]; then
+  skip "rust-analyzer  $(rust-analyzer --version 2>/dev/null | head -1)"
+else
+  info "安装/更新 rust-analyzer (rustup component)"
+  rustup component add rust-analyzer
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
 # 5. Debian/Ubuntu 专有：xclip + ImageMagick 6
 #    用 `apt-get download` 取官方 deb 再解包到 ~/.local，全程不需要 root
 # ─────────────────────────────────────────────────────────────────────────────
@@ -235,6 +250,16 @@ for c in nvim rg fd xclip lazygit magick rsvg-convert stylua black isort prettie
   if have "$c"; then printf '  \033[1;32m✓\033[0m %s\n' "$c"
   else printf '  \033[1;31m✗\033[0m %s\n' "$c"; MISSING=1; fi
 done
+
+# rust-analyzer 必须真的能执行：只判断文件存在会被 rustup 代理壳骗过
+if have rust-analyzer; then
+  if rust-analyzer --version >/dev/null 2>&1; then
+    printf '  \033[1;32m✓\033[0m rust-analyzer (%s)\n' "$(rust-analyzer --version 2>/dev/null | head -1)"
+  else
+    printf '  \033[1;31m✗\033[0m rust-analyzer 组件缺失 —— 执行: rustup component add rust-analyzer\n'
+    MISSING=1
+  fi
+fi
 
 echo
 if [[ $MISSING -eq 1 ]]; then

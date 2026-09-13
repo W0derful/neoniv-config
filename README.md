@@ -71,6 +71,29 @@ nvim
 
 服务配置在 `lua/plugins/lsp.lua`，需要时再改它。
 
+### 类型提示（inlay hints）
+
+Neovim 0.10+ 内置，配置里的 `inlay-hints.nvim` 会在 LSP 挂载时自动开启。
+推断出的类型会以灰色小字显示在变量/参数旁边，例如 `const count = 42` 后面显示 `: number`。
+
+临时开关：
+
+```vim
+:InlayHintsToggle
+:InlayHintsEnable
+:InlayHintsDisable
+```
+
+各语言支持情况（取决于对应 LSP 是否实现 `textDocument/inlayHint`）：
+
+| 语言 | 服务 | 类型提示 |
+| --- | --- | --- |
+| TS / JS / React | vtsls | ✅ 需要在 `lsp.lua` 里设置 `typescript.inlayHints.*`（已配好） |
+| Rust | rust-analyzer | ✅ 支持很好 |
+| Vue | vue_ls + vtsls | ⚠️ 部分 |
+| C# | OmniSharp | ❌ 不支持（OmniSharp 未实现该协议；想要就得换 Roslyn LSP） |
+| HTML / CSS / JSON / ESLint / Tailwind / Emmet | — | ❌ 这些服务不提供 |
+
 ## 4. 插件管理（lazy.nvim）
 
 插件版本锁在 `lazy-lock.json`，升级后记得把它提交回仓库。
@@ -125,6 +148,11 @@ pipx upgrade black && pipx upgrade isort
    所以 Go 文件不会被格式化；装了 Go 之后自动生效。
 7. **可忽略的 warning**：`:checkhealth` 里关于 Python/Node/Perl provider、
    额外 treesitter parser（html/yaml/latex）、`site/pack/core` 的提示都不影响使用。
+8. **rust-analyzer 的坑**：`~/.cargo/bin/rust-analyzer` 只是 rustup 的代理壳，
+   文件存在 ≠ 能用。如果当前 toolchain 没装该组件，执行会报
+   `error: Unknown binary 'rust-analyzer'`，Rust 的补全/跳转/提示会**全部失效**，
+   但 `vim.fn.executable()` 依然返回 1，很容易误判。修复：
+   `rustup component add rust-analyzer`（`./install.sh` 已包含并会真正执行校验）。
 
 ## 7. 目录结构
 
