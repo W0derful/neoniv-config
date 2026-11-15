@@ -111,23 +111,45 @@ return {
       -- ─────────────────────────────────────────────
       -- 4) C#（OmniSharp）
       -- ─────────────────────────────────────────────
-      vim.lsp.config("omnisharp", {
-        settings = {
-          FormattingOptions = {
-            EnableEditorConfigSupport = true, -- 读取 .editorconfig
-            OrganizeImports = nil,            -- 保存时不强制整理 using
-          },
-          MsBuild = {
-            LoadProjectsOnDemand = false,
-          },
-          RoslynExtensionsOptions = {
-            EnableAnalyzersSupport = true,     -- 启用 Roslyn 分析器/代码修复
-            EnableImportCompletion = true,      -- 支持补全缺失的 using
-            AnalyzeOpenDocumentsOnly = false,
-          },
-          Sdk = {
-            IncludePrereleases = true,
-          },
+       vim.lsp.config("csharp_ls", {
+        cmd = { "csharp-ls" },
+        filetypes = { "cs" },
+        root_dir = vim.fs.root(0, function(name)
+          return name:match("%.sln$") ~= nil or name:match("%.csproj$") ~= nil
+        end),
+      })
+
+      -- ─────────────────────────────────────────────
+      -- 4.5) C / C++（clangd）
+      --   系统里编译用 GCC，这里让 clangd 向 GCC 查询系统头文件路径，
+      --   避免标准库头文件解析失败。
+      --   单文件练习无需 compile_commands.json；多文件项目建议生成。
+      -- ─────────────────────────────────────────────
+      vim.lsp.config("clangd", {
+        cmd = {
+          "clangd",
+          "--background-index",
+          "--clang-tidy",
+          "--header-insertion=iwyu",
+          "--completion-style=detailed",
+          "--function-arg-placeholders",
+          "--fallback-style=llvm",
+          "--query-driver=/usr/bin/gcc,/usr/bin/g++",
+        },
+        filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
+        root_markers = {
+          "compile_commands.json",
+          "compile_flags.txt",
+          ".clangd",
+          "Makefile",
+          "CMakeLists.txt",
+          "meson.build",
+          ".git",
+        },
+        init_options = {
+          usePlaceholders = true,
+          completeUnimported = true,
+          clangdFileStatus = true,
         },
       })
 
@@ -137,13 +159,14 @@ return {
       vim.lsp.enable({
         "vtsls",                  -- TS / JS / React
         "vue_ls",                 -- Vue
-        "omnisharp",              -- C#
+        "csharp_ls",              -- C#
         "html",                   -- HTML
         "cssls",                  -- CSS / SCSS / LESS
         "jsonls",                 -- JSON
         "eslint",                 -- ESLint
         "tailwindcss",            -- Tailwind CSS
         "emmet_language_server",  -- Emmet 缩写展开
+        "clangd",                 -- C/C++
       })
     end,
   },

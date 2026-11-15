@@ -65,6 +65,9 @@ return {
       "rijulpaul/nightblossom.nvim",
       "folke/tokyonight.nvim",
       "rebelot/kanagawa.nvim",
+      "comfysage/cuddlefish.nvim",
+      "tan-wei/zimablue.nvim",
+      "sainnhe/gruvbox-material",
 
       -- 配置项
       activity = {

@@ -116,7 +116,7 @@ local telescope_builtin = function(cmd)
 end
 
 -- 文件查找
-keymap("n", "<leader>f", "", { desc = "搜索" })
+keymap("n", "<leader>f", "<Nop>", { desc = "搜索" })
 keymap("n", "<leader>ff", telescope_builtin("find_files"), { desc = "找文件" })
 keymap("n", "<leader>fb", telescope_builtin("buffers"), { desc = "找buffer" })
 keymap("n", "<leader>fr", telescope_builtin("oldfiles"), { desc = "最近文件" })
