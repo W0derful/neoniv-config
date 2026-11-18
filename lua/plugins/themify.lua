@@ -40,6 +40,12 @@ return {
       -- 🖤 极简黑白 🖤
       "kdheepak/monochrome.nvim",      -- 只用黑白灰，高对比
       "amedoeyes/eyes.nvim",           -- 纯单色，明暗两套
+      { -- 灰阶，仅用颜色区分高亮；作者漏了初始化，切换前先 setup 一次
+        "https://codeberg.org/matschi2/black-white.nvim",
+        before = function()
+          require("blackwhite").setup({})
+        end,
+      },
 
       -- 其他高质量备选
       "EdenEast/nightfox.nvim", -- 切到 duskfox 模式也是满满粉紫感
