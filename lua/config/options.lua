@@ -7,3 +7,5 @@ vim.opt.expandtab = true       -- 用空格代替 Tab
 vim.opt.mouse = "a"            -- 启用鼠标
 vim.opt.termguicolors = true   -- 启用真彩色
 vim.opt.clipboard = "unnamedplus" -- 系统剪贴板
+
+
