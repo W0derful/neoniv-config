@@ -7,5 +7,7 @@ vim.opt.expandtab = true       -- 用空格代替 Tab
 vim.opt.mouse = "a"            -- 启用鼠标
 vim.opt.termguicolors = true   -- 启用真彩色
 vim.opt.clipboard = "unnamedplus" -- 系统剪贴板
+vim.g.monochrome_style = "custom"
+vim.g.monochrome_custom_style = { "#F7F7F7", "#0B0B0B"}
 
-
+require("float-setup").setup()

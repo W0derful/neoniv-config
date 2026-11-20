@@ -229,6 +229,7 @@ return {
               FloatBorder = "FloatBorder",
             },
           },
+
         },
 
         popupmenu = {
@@ -265,6 +266,14 @@ return {
           border = {
             style = "rounded",
           },
+        },
+
+        -- hover / signature 默认 border.style = "none"，K 的浮窗就没有边框
+        hover = {
+          border = { style = "double", padding = { 0, 1 } },
+        },
+        signature = {
+          border = { style = "double", padding = { 0, 1 } },
         },
       },
 

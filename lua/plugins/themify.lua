@@ -38,7 +38,40 @@ return {
       "scottmckendry/cyberdream.nvim", -- 霓虹赛博粉紫
 
       -- 🖤 极简黑白 🖤
-      "kdheepak/monochrome.nvim",      -- 只用黑白灰，高对比
+      { -- 只用黑白灰；类型名 gray4 太暗，加载后提亮
+        "kdheepak/monochrome.nvim",
+        after = function()
+          -- 纯明度分层，全部常规字重（不加粗）
+          -- 普通文本不要纯白，给关键字留出最亮那档
+          -- 必须连 bg 一起写，否则 nvim_set_hl 会把背景清成透明
+          vim.api.nvim_set_hl(0, "Normal", { fg = "#E4E4E4", bg = "#0B0B0B" })
+          vim.api.nvim_set_hl(0, "NormalFloat", { fg = "#E4E4E4", bg = "#0B0B0B" })
+
+          -- 关键字：if / for / while / return / let / impl —— 最亮 #FFFFFF
+          vim.api.nvim_set_hl(0, "TSKeyword", { fg = "#FFFFFF" })
+          vim.api.nvim_set_hl(0, "TSKeywordFunction", { fg = "#FFFFFF" })
+          vim.api.nvim_set_hl(0, "TSKeywordReturn", { fg = "#FFFFFF" })
+          vim.api.nvim_set_hl(0, "TSConditional", { fg = "#FFFFFF" })
+          vim.api.nvim_set_hl(0, "TSRepeat", { fg = "#FFFFFF" })
+          vim.api.nvim_set_hl(0, "TSInclude", { fg = "#FFFFFF" })
+
+          -- 类型名：int / size_t / u32 —— 最暗一档但依然清楚 #A8A8A8
+          vim.api.nvim_set_hl(0, "TSType", { fg = "#A8A8A8" })
+          vim.api.nvim_set_hl(0, "TSTypeBuiltin", { fg = "#A8A8A8" })
+          vim.api.nvim_set_hl(0, "TSTypeDefinition", { fg = "#A8A8A8" })
+          vim.api.nvim_set_hl(0, "Typedef", { fg = "#A8A8A8" })
+
+          -- 字符串 / 函数 / 运算符：中间三档，互不重叠
+          vim.api.nvim_set_hl(0, "TSString", { fg = "#C6C6C6" })
+          vim.api.nvim_set_hl(0, "TSStringEscape", { fg = "#DDDDDD" })
+          vim.api.nvim_set_hl(0, "TSFunction", { fg = "#D4D4D4" })
+          vim.api.nvim_set_hl(0, "TSOperator", { fg = "#BEBEBE" })
+          vim.api.nvim_set_hl(0, "TSKeywordOperator", { fg = "#BEBEBE" })
+          -- 注释原来只有 2.2:1，太费眼，抬到约 6:1
+          vim.api.nvim_set_hl(0, "TSComment", { fg = "#8A8A8A", italic = true })
+          vim.api.nvim_set_hl(0, "Comment", { fg = "#8A8A8A", italic = true })
+        end,
+      },
       "amedoeyes/eyes.nvim",           -- 纯单色，明暗两套
       { -- 灰阶，仅用颜色区分高亮；作者漏了初始化，切换前先 setup 一次
         "https://codeberg.org/matschi2/black-white.nvim",
