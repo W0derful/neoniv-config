@@ -156,18 +156,39 @@ return {
       -- ─────────────────────────────────────────────
       -- 5) 启用服务（未列出的服务不会启动）
       -- ─────────────────────────────────────────────
-      vim.lsp.enable({
-        "vtsls",                  -- TS / JS / React
-        "vue_ls",                 -- Vue
-        "csharp_ls",              -- C#
-        "html",                   -- HTML
-        "cssls",                  -- CSS / SCSS / LESS
-        "jsonls",                 -- JSON
-        "eslint",                 -- ESLint
-        "tailwindcss",            -- Tailwind CSS
-        "emmet_language_server",  -- Emmet 缩写展开
-        "clangd",                 -- C/C++
-      })
+      -- 只启用「可执行文件真的存在」的服务。
+      -- 否则 vim.lsp.enable 会直接抛 invalid config 错误（例如没装 clangd 时
+      -- 打开 .c 文件只得到一句 clangd is not executable），看起来就像 LSP 没启动。
+      local wanted = {
+        { "vtsls", "vtsls" },                                   -- TS / JS / React
+        { "vue_ls", "vue-language-server" },                    -- Vue
+        { "csharp_ls", "csharp-ls" },                           -- C#（需 dotnet SDK）
+        { "html", "vscode-html-language-server" },              -- HTML
+        { "cssls", "vscode-css-language-server" },              -- CSS / SCSS / LESS
+        { "jsonls", "vscode-json-language-server" },            -- JSON
+        { "eslint", "vscode-eslint-language-server" },          -- ESLint
+        { "tailwindcss", "tailwindcss-language-server" },       -- Tailwind CSS
+        { "emmet_language_server", "emmet-language-server" },   -- Emmet 缩写展开
+        { "clangd", "clangd" },                                 -- C / C++
+      }
+
+      local ready, missing = {}, {}
+      for _, item in ipairs(wanted) do
+        if vim.fn.executable(item[2]) == 1 then
+          ready[#ready + 1] = item[1]
+        else
+          missing[#missing + 1] = string.format("%s  ← 缺 %s", item[1], item[2])
+        end
+      end
+
+      vim.lsp.enable(ready)
+
+      if #missing > 0 then
+        vim.notify(
+          "以下语言服务缺少可执行文件，未启动：\n  " .. table.concat(missing, "\n  "),
+          vim.log.levels.WARN
+        )
+      end
     end,
   },
 }

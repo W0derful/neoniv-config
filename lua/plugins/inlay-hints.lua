@@ -1,20 +1,4 @@
-return {
-  -- inlay-hints.nvim: 行内类型提示插件
-  "MysticalDevil/inlay-hints.nvim",
-
-  event = "LspAttach",
-  dependencies = { "neovim/nvim-lspconfig" },
-
-  config = function()
-    local orig_set = vim.lsp.inlay_hint.set
-    vim.lsp.inlay_hint.set = function(...)
-      local ok, err = pcall(orig_set, ...)
-      if not ok then
-        if not err:match("out of range") then
-          vim.notify(err, vim.log.levels.ERROR)
-        end
-      end
-    end
-    require("inlay-hints").setup()
-  end
-}
+-- 上游这里原本是 "MysticalDevil/inlay-hints.nvim"，该仓库现已 404，
+-- lazy.nvim 会无限重试克隆并抛出 "Too many rounds of missing plugins"。
+-- 已改用 Neovim 内置实现，见 lua/config/inlay-hints.lua（由 init.lua 加载）。
+return {}
